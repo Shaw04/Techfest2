@@ -4,15 +4,15 @@ import { useContext } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Header() {
-  const { setUserData } = useContext(UserContext);
+  const { UserData, setUserData } = useContext(UserContext);
   const navigator = useNavigate();
-  const { isAuthenticated, logout, loginWithRedirect, user } = useAuth0();
+  const { logout, loginWithRedirect } = useAuth0();
 
   const handleLogout = () => {
-    logout({ returnTo: window.location.origin });
     localStorage.removeItem("user");
-    setUserData(null); // Clear user data from context
-    navigator("/");
+    setUserData(undefined); // Clear user data from context
+    logout({ returnTo: window.location.origin });
+    // navigator("/");
   };
   const handleLogin = () => {
     loginWithRedirect();
@@ -30,9 +30,9 @@ export default function Header() {
             />
           </Link>
           <div className="flex items-center lg:order-2">
-            {isAuthenticated ? (
+            {UserData ? (
               <>
-                <span className="text-gray-800 mr-4">{user?.name}</span>
+                <span className="text-gray-800 mr-4">{UserData.nickname}</span>
                 <button
                   onClick={handleLogout}
                   className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:ring-orange-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none"

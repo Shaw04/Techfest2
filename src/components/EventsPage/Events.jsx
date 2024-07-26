@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
-import axios from "axios";
+
 import { UserContext } from "../../App";
+import Api from "../AxiosInterceptor/Api";
 
 export default function Events() {
   const { UserData, setEventdata, EventData } = useContext(UserContext);
@@ -10,7 +11,7 @@ export default function Events() {
 
   const getAPIdata = async () => {
     try {
-      const res = await axios.get("http://localhost:8080/event");
+      const res = await Api.get("/event");
       setEventdata(res.data);
       return res.data;
     } catch (error) {
@@ -21,10 +22,10 @@ export default function Events() {
   };
 
   const checkRegistrationStatus = async (eventId) => {
-    if (UserData && UserData.userID) {
+    if (UserData && UserData.email) {
       try {
-        const res = await axios.get(
-          `http://localhost:8080/reg/status?userId=${UserData.userID}&eventId=${eventId}`
+        const res = await Api.get(
+          `reg/status?userId=${UserData.email}&eventId=${eventId}`
         );
         return res.data;
       } catch (error) {
@@ -56,7 +57,7 @@ export default function Events() {
 
   const handleDeleteEvent = async (id) => {
     try {
-      const res = await axios.delete(`http://localhost:8080/event/${id}`);
+      const res = await Api.delete(`/event/${id}`);
       if (res.status === 200) {
         console.log(res);
         window.location.reload();
@@ -99,30 +100,30 @@ export default function Events() {
                   </p>
 
                   {UserData ? (
-                    UserData.role !== "Organizer" ? (
-                      events.isRegistered ? (
-                        <span className="inline-flex text-white items-center px-3 py-2 my-5 font-medium bg-gray-500 rounded-lg">
-                          Registered
-                        </span>
-                      ) : (
-                        <Link
-                          className="inline-flex text-white items-center px-3 py-2 my-5 font-medium bg-orange-700 rounded-lg hover:opacity-75"
-                          to="/eventreg"
-                          state={{ eventName: events.title }}
-                        >
-                          &nbsp; Register Now!
-                        </Link>
-                      )
+                    // UserData.role !== "Organizer" ? (
+                    events.isRegistered ? (
+                      <span className="inline-flex text-white items-center px-3 py-2 my-5 font-medium bg-gray-500 rounded-lg">
+                        Registered
+                      </span>
                     ) : (
                       <Link
-                        className="inline-flex text-white text-center items-center px-3 py-2 my-5 font-medium bg-orange-700 rounded-lg hover:opacity-75"
-                        to="/addevent"
-                        state={{ events: events }}
+                        className="inline-flex text-white items-center px-3 py-2 my-5 font-medium bg-orange-700 rounded-lg hover:opacity-75"
+                        to="/eventreg"
+                        state={{ eventName: events.title }}
                       >
-                        &nbsp; Edit
+                        &nbsp; Register Now!
                       </Link>
                     )
                   ) : (
+                    // ) : (
+                    //   <Link
+                    //     className="inline-flex text-white text-center items-center px-3 py-2 my-5 font-medium bg-orange-700 rounded-lg hover:opacity-75"
+                    //     to="/addevent"
+                    //     state={{ events: events }}
+                    //   >
+                    //     &nbsp; Edit
+                    //   </Link>
+                    // )
                     <Link
                       className="inline-flex text-white items-center px-3 py-2 my-5 font-medium bg-orange-700 rounded-lg hover:opacity-75"
                       to="/contact"

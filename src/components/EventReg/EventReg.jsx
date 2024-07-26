@@ -2,8 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { UserContext } from "../../App";
-import axios from "axios";
-
+import Api from "../AxiosInterceptor/Api";
 export default function EventReg() {
   const location = useLocation();
 
@@ -11,7 +10,7 @@ export default function EventReg() {
 
   const { EventData, UserData } = useContext(UserContext);
 
-  const [date, setDate] = useState(new Date());
+  const [date] = useState(new Date());
 
   const RegForm = document.RegForm;
 
@@ -25,11 +24,11 @@ export default function EventReg() {
     RegForm.email.value = "";
     const event = EventData.find((event) => event.title == eventName);
     const eventId = event.eventID;
-    const userId = UserData.userID;
+    const userId = UserData.email;
 
     const regDate = date.toDateString();
     try {
-      const res = await axios.post("http://localhost:8080/reg", {
+      const res = await Api.post("/reg", {
         userId,
         eventId,
         regDate,
