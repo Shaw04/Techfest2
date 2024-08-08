@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import { UserContext } from "../../App";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { useRef } from "react";
+import Api from "../AxiosInterceptor/Api";
 
 export default function AddEvent() {
   const location = useLocation();
@@ -56,10 +57,14 @@ export default function AddEvent() {
     e.preventDefault();
     if (dec) {
       try {
-        const res = await axios.put(
-          `http://localhost:8080/event/${events.eventID}`,
-          { title, description, date, time, venueId, logo }
-        );
+        const res = await Api.put(`event/${events.eventID}`, {
+          title,
+          description,
+          date,
+          time,
+          venueId,
+          logo,
+        });
         if (res.status === 200) {
           const updatedIndex = EventData.findIndex(
             (event) => event.eventID === events.eventID
@@ -77,7 +82,7 @@ export default function AddEvent() {
       }
     } else {
       try {
-        const res = await axios.post("http://localhost:8080/event", {
+        const res = await Api.post("/event", {
           title,
           description,
           date,

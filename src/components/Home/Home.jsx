@@ -61,7 +61,7 @@ export default function Home() {
         {UserData ? (
           <div>
             <h1 className="text-center text-2xl sm:text-5xl font-body2 py-10 font-medium">
-              Welcome, {UserData.nickname}!
+              Welcome, {UserData.name}!
             </h1>
           </div>
         ) : (

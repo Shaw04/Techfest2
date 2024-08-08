@@ -11,11 +11,13 @@ import Login from "./components/Login/Login";
 
 import Sso from "./components/SSO/Sso";
 import { initializeAuth0Client } from "./components/AxiosInterceptor/Api";
+
 export const UserContext = createContext();
 
 function App() {
   const [UserData, setUserData] = useState(undefined);
   const [EventData, setEventdata] = useState([]);
+  const [role, setRole] = useState("");
 
   const auth0 = useAuth0();
 
@@ -33,7 +35,14 @@ function App() {
   return (
     <>
       <UserContext.Provider
-        value={{ UserData, setUserData, EventData, setEventdata }}
+        value={{
+          UserData,
+          setUserData,
+          EventData,
+          setEventdata,
+          role,
+          setRole,
+        }}
       >
         <Routes>
           <Route path="/" element={<Sso />}>

@@ -5,8 +5,7 @@ import { UserContext } from "../../App";
 import Api from "../AxiosInterceptor/Api";
 
 export default function Events() {
-  const { UserData, setEventdata, EventData } = useContext(UserContext);
-
+  const { UserData, setEventdata, EventData, role } = useContext(UserContext);
   const [Error, setError] = useState("");
 
   const getAPIdata = async () => {
@@ -100,30 +99,30 @@ export default function Events() {
                   </p>
 
                   {UserData ? (
-                    // UserData.role !== "Organizer" ? (
-                    events.isRegistered ? (
-                      <span className="inline-flex text-white items-center px-3 py-2 my-5 font-medium bg-gray-500 rounded-lg">
-                        Registered
-                      </span>
+                    role !== "admin" ? (
+                      events.isRegistered ? (
+                        <span className="inline-flex text-white items-center px-3 py-2 my-5 font-medium bg-gray-500 rounded-lg">
+                          Registered
+                        </span>
+                      ) : (
+                        <Link
+                          className="inline-flex text-white items-center px-3 py-2 my-5 font-medium bg-orange-700 rounded-lg hover:opacity-75"
+                          to="/eventreg"
+                          state={{ eventName: events.title }}
+                        >
+                          &nbsp; Register Now!
+                        </Link>
+                      )
                     ) : (
                       <Link
-                        className="inline-flex text-white items-center px-3 py-2 my-5 font-medium bg-orange-700 rounded-lg hover:opacity-75"
-                        to="/eventreg"
-                        state={{ eventName: events.title }}
+                        className="inline-flex text-white text-center items-center px-3 py-2 my-5 font-medium bg-orange-700 rounded-lg hover:opacity-75"
+                        to="/addevent"
+                        state={{ events: events }}
                       >
-                        &nbsp; Register Now!
+                        &nbsp; Edit
                       </Link>
                     )
                   ) : (
-                    // ) : (
-                    //   <Link
-                    //     className="inline-flex text-white text-center items-center px-3 py-2 my-5 font-medium bg-orange-700 rounded-lg hover:opacity-75"
-                    //     to="/addevent"
-                    //     state={{ events: events }}
-                    //   >
-                    //     &nbsp; Edit
-                    //   </Link>
-                    // )
                     <Link
                       className="inline-flex text-white items-center px-3 py-2 my-5 font-medium bg-orange-700 rounded-lg hover:opacity-75"
                       to="/contact"
@@ -131,7 +130,7 @@ export default function Events() {
                       &nbsp; Register Now!
                     </Link>
                   )}
-                  {UserData && UserData.role === "Organizer" && (
+                  {UserData && role === "admin" && (
                     <button
                       onClick={() => handleDeleteEvent(events.eventID)}
                       className="inline-flex text-white items-center ml-2 px-3 py-2 my-5 font-medium bg-orange-700 rounded-lg hover:opacity-75"

@@ -10,7 +10,7 @@ const Sso = () => {
   const { isAuthenticated, loginWithRedirect, user, isLoading, error } =
     useAuth0();
   const navigate = useNavigate();
-  const { setUserData } = useContext(UserContext);
+  const { setUserData, setRole } = useContext(UserContext);
 
   console.log(isAuthenticated, user);
 
@@ -20,6 +20,9 @@ const Sso = () => {
       if (isAuthenticated) {
         localStorage.setItem("user", JSON.stringify(user));
         setUserData(user);
+        const userMetadata = user["https://your-namespace/user_metadata"];
+        const role = userMetadata ? userMetadata.role : "No role assigned";
+        setRole(role);
         navigate("/home");
       } else if (!error) {
         loginWithRedirect();
