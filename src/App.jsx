@@ -1,4 +1,3 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import { createContext, useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import About from "./components/About/About";
@@ -10,7 +9,6 @@ import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
 
 import Sso from "./components/SSO/Sso";
-import { initializeAuth0Client } from "./components/AxiosInterceptor/Api";
 
 export const UserContext = createContext();
 
@@ -18,12 +16,6 @@ function App() {
   const [UserData, setUserData] = useState(undefined);
   const [EventData, setEventdata] = useState([]);
   const [role, setRole] = useState("");
-
-  const auth0 = useAuth0();
-
-  useEffect(() => {
-    initializeAuth0Client(auth0);
-  }, [auth0]);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");

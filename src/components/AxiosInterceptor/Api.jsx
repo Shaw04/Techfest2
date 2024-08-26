@@ -1,38 +1,16 @@
 import axios from "axios";
-// import { useAuth0 } from '@auth0/auth0-react';
-
-let auth0Client;
-
-export const initializeAuth0Client = (auth0) => {
-  auth0Client = auth0;
-};
 
 const Api = axios.create({
-  baseURL: "http://localhost:8080", // Replace with your API base URL
+  baseURL: "http://localhost:8081", // Replace with your API base URL
 });
 
+// Request interceptor to attach the token
 Api.interceptors.request.use(
-  async (config) => {
-    if (!auth0Client) {
-      console.error("Auth0 client not initialized");
-      return config;
-    }
-
-    try {
-      const claims = await auth0Client.getIdTokenClaims();
-      const token = claims.__raw; // This is the raw ID token
-      console.log("Raw token:", token);
-      console.log("Token parts:", token.split(".").length);
-      try {
-        console.log("Payload:", JSON.parse(atob(token.split(".")[1])));
-      } catch (e) {
-        console.log("Failed to decode payload:", e);
-      }
+  (config) => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
-    } catch (error) {
-      console.error("Error getting access token", error);
     }
-
     return config;
   },
   (error) => {
@@ -40,7 +18,7 @@ Api.interceptors.request.use(
   }
 );
 
-// Response interceptor (same as before)
+// Response interceptor to handle token refresh
 Api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -50,20 +28,33 @@ Api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const claims = await auth0Client.getIdTokenClaims({
-          ignoreCache: true,
-        });
-        const token = claims.__raw;
-        originalRequest.headers["Authorization"] = `Bearer ${token}`;
+        // const newToken = await getNewAccessToken();
+        const newToken = localStorage.getItem("access_token");
+        localStorage.setItem("access_token", newToken);
+        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
         return Api(originalRequest);
       } catch (refreshError) {
         console.error("Error refreshing token", refreshError);
-        // Handle refresh error (e.g., redirect to login)
+        // Redirect to login or handle token refresh failure
+        window.location.href = "/login";
       }
     }
 
     return Promise.reject(error);
   }
 );
+
+// Function to get a new access token
+// async function getNewAccessToken() {
+//   try {
+//     const response = await axios.get(
+//       "http://localhost:8081/auth/token/refresh"
+//     );
+//     return response.data.access_token;
+//   } catch (error) {
+//     console.error("Failed to get new access token", error);
+//     throw error;
+//   }
+// }
 
 export default Api;

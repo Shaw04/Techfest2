@@ -9,7 +9,7 @@ export default function Header() {
   const { logout, loginWithRedirect } = useAuth0();
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    localStorage.removeItem("access_token");
     setUserData(undefined); // Clear user data from context
     logout({ returnTo: window.location.origin });
     // navigator("/");
