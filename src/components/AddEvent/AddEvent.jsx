@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { useRef } from "react";
-import Api from "../AxiosInterceptor/Api";
+import { techfestApi } from "../AxiosInterceptor/Api";
 
 export default function AddEvent() {
   const location = useLocation();
@@ -57,7 +57,7 @@ export default function AddEvent() {
     e.preventDefault();
     if (dec) {
       try {
-        const res = await Api.put(`event/${events.eventID}`, {
+        const res = await techfestApi.put(`event/${events.eventID}`, {
           title,
           description,
           date,
@@ -82,7 +82,7 @@ export default function AddEvent() {
       }
     } else {
       try {
-        const res = await Api.post("/event", {
+        const res = await techfestApi.post("/event", {
           title,
           description,
           date,

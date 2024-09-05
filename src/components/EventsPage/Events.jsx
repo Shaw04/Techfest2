@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 
 import { UserContext } from "../../App";
-import Api from "../AxiosInterceptor/Api";
+import { techfestApi } from "../AxiosInterceptor/Api";
 
 export default function Events() {
   const { UserData, setEventdata, EventData, role } = useContext(UserContext);
@@ -10,7 +10,7 @@ export default function Events() {
 
   const getAPIdata = async () => {
     try {
-      const res = await Api.get("/event");
+      const res = await techfestApi.get("/event");
       setEventdata(res.data);
       return res.data;
     } catch (error) {
@@ -23,7 +23,7 @@ export default function Events() {
   const checkRegistrationStatus = async (eventId) => {
     if (UserData && UserData.email) {
       try {
-        const res = await Api.get(
+        const res = await techfestApi.get(
           `reg/status?userId=${UserData.email}&eventId=${eventId}`
         );
         return res.data;
@@ -56,7 +56,7 @@ export default function Events() {
 
   const handleDeleteEvent = async (id) => {
     try {
-      const res = await Api.delete(`/event/${id}`);
+      const res = await techfestApi.delete(`/event/${id}`);
       if (res.status === 200) {
         console.log(res);
         window.location.reload();

@@ -64,7 +64,7 @@ const Sso = () => {
       } catch (error) {
         console.error("Authentication error:", error);
         localStorage.removeItem("access_token");
-        navigate("/login");
+        navigate("/");
       } finally {
         setIsAuthenticating(false);
       }
