@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { UserContext } from "../../App";
-import Api from "../AxiosInterceptor/Api";
+import Api, { techfestApi } from "../AxiosInterceptor/Api";
 export default function EventReg() {
   const location = useLocation();
 
@@ -28,7 +28,7 @@ export default function EventReg() {
 
     const regDate = date.toDateString();
     try {
-      const res = await Api.post("/reg", {
+      const res = await techfestApi.post("/reg", {
         userId,
         eventId,
         regDate,
